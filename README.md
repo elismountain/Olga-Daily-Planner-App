@@ -23,7 +23,8 @@ I started out by linking the script tags accordingly and the css into the header
 
 I then added in a If/Else statement to allow the past / present or future class to be added. This would then become applicable depending on the time of day. I added another If/Else statement to add and remove appointments on the planner and the ablity to save the appointments was also added in with a 'click' function. 
 
-Please, see the app here - ![Alt text](<assets/images/screenshot1.png>)
+Please, see the app without data - ![Alt text](<assets/images/screenshot1.png>)
+Please, see the app with saved data and runnung time - ![Alt text](<assets/images/screenshot2.png>)
 
 
 
