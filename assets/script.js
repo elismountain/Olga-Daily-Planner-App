@@ -1,64 +1,69 @@
-
-    // function displayTime() {
-    //     $('#currentDay').text(dayjs().format
-    //     ('dddd, MMMM D, YYYY'))
-    //     $('#currentTime').text(dayjs().format
-    //     ('h:mm:ss'))
-    // }
-    
-    // displayTime();
-
 //added the function to desplay current time and the day
 
 const timeDisplayEl = $('#time-display');
+const currentHour = dayjs().hour();
 
 
 function displayTime() {
-    const rightNow = dayjs().format('DD MMM YYYY [at] hh:mm:ss a');
+    const rightNow = dayjs().format('hh:mm:ss a');
     timeDisplayEl.text(rightNow);
   }
 
-  setInterval(displayTime);
+  setInterval(displayTime, 150);
 
 
-  // added function to update hours
 
-  function updateHour() {
+$(document).ready(function () {
+    function formatHour(hour) {
+    return dayjs().hour(hour).format('h A');
+    }
 
-    let currentHour = dayjs().hour();
-    console.log(currentHour);
-    let timeBlock = $('.time-block');
-    console.log(timeBlock);
+    setInterval(formatHour, 150);
 
-    timeBlock.each(function() {
-        let blockHour = parseInt($(this).attr('id'));
-        console.log(blockHour);
+    function createRow(hour) {
+    const row = $("<div>").addClass("row time-block");
+    const timeCol = $("<div>").addClass("col-md-1 hour").text(formatHour(hour));
+    const textArea = $("<textarea>").addClass("col-md-10 description").attr("data-hour", formatHour(hour).replace(/\s+/g, "").toLowerCase());
+    const saveBtn = $("<button>").addClass("col-md-1 saveBtn").html("<i class='fas fa-save'></i>");      
+    const currentHour = dayjs().hour();
+    
+    if (hour < currentHour) {
+        textArea.addClass("past");
+    } else if (hour === currentHour) {
+        textArea.addClass("present");
+    } else {
+        textArea.addClass("future");
+    }
 
-        if (currentHour > blockHour) {
-            $(this).addClass('past');
-        } else if (currentHour === blockHour) {
-            $(this).removeClass('past');
-            $(this).addClass('present');
-        }else {
-            $(this).removeClass('past');
-            $(this).removeClass('present');
-            $(this).addClass('feauture');
+    saveBtn.on("click", function () {
+        const userInput = textArea.val().trim();
+        const currentHour = textArea.data("hour");
+
+        if (userInput !== "") {
+        localStorage.setItem(currentHour, userInput);
+        } else {
+        localStorage.removeItem(currentHour);
         }
-    })
-  }
+    });
 
 
-  setInterval(updateHour);
+    row.append(timeCol, textArea, saveBtn);
+    $(".container").append(row);
+    }
 
 
-//   $('.saveBtn').click(function () {
-//     // grab values of the textareas (class of description)
-//     // Save the values to local storage using the ids as the keys and the values of the textareas for the values
-//   })
+    function loadEvents() {
+    for (let hour = 8; hour <= 20; hour++) {
+        createRow(hour);
+        const currentHour = formatHour(hour).replace(/\s+/g, "").toLowerCase();
+        const savedEvent = localStorage.getItem(currentHour);
 
-// //   Load any saved data from localStorage
+        if (savedEvent) {
+        $(`textarea[data-hour="${currentHour}"]`).val(savedEvent);
+        }
+    }
+    }
 
-
-
-  
-
+    $("#currentDay").text(dayjs().format("dddd, MMMM D"));
+    loadEvents();
+});
