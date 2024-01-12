@@ -48,7 +48,7 @@ function displayTime() {
   }
 
 
-  setInterval(updateHour, 15000);
+  setInterval(updateHour);
 
 
 //   $('.saveBtn').click(function () {
